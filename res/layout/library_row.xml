@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.onazifi.shelf.HorizontalListView
+    <com.marengga.whizzle.adapter.LibraryHorizontalListViewAdapter
         android:id="@+id/subListview"
         android:layout_width="fill_parent"
         android:layout_height="130dip"

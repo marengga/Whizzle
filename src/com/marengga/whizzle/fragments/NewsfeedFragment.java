@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,11 +49,11 @@ public class NewsfeedFragment extends Fragment {
 		return mFragment;
 	}
 	
-    private static final String TAG = NewsfeedFragment.class.getSimpleName();
+    private static final String TAG = "Newsfeed Fragment";
     private ListView listView;
     private NewsfeedAdapter listAdapter;
     private List<NewsfeedModel> feedItems;
-    private String URL_FEED = Constant.URL_FEED;
+    private String URL_FEED = Constant.BASE_API_URL+"news/";
  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +91,7 @@ public class NewsfeedFragment extends Fragment {
  
                         @Override
                         public void onResponse(JSONArray response) {
-                            VolleyLog.d(TAG, "Response: " + response.toString());
+                            Log.d(TAG, "Response: " + response.toString());
                             if (response != null) {
                                 parseJsonFeed(response);
                             }
@@ -99,7 +100,7 @@ public class NewsfeedFragment extends Fragment {
  
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            VolleyLog.d(TAG, "Error: " + error.getMessage());
+                            Log.e(TAG, "Error on Volley: " + error.getMessage());
                         }
                     });
  

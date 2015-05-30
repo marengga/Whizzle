@@ -14,8 +14,7 @@ public class Constant {
 	public static final int MENU_SETTING = 8;	
 	public static final int MENU_ABOUT = 9;
 	
-	//public static final String URL_FEED = "http://10.0.3.2:1223/api/news/";
-	public static final String URL_FEED = "http://192.168.1.9:1223/api/news/";
+	public static final String BASE_API_URL = "http://192.168.1.9:1223/api/";
 	public static final int CAT_NEWS = 1;
 	public static final int CAT_UPDATE = 2;
 	

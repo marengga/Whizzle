@@ -30,7 +30,6 @@ import com.marengga.whizzle.adapter.LibraryHorizontalListViewAdapter;
 import com.marengga.whizzle.app.AppController;
 
 import android.annotation.SuppressLint;
-import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -49,7 +48,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,6 +58,7 @@ public class LibraryFragment extends Fragment {
 	private boolean mSearchCheck;
 	private VerticalAdapter verListAdapter;
 	DatabaseHelper db;
+	private String URL_LIBRARY = Constant.BASE_API_URL+"library/";
 	
 	public LibraryFragment newInstance(String text){
 		LibraryFragment mFragment = new LibraryFragment();		
@@ -71,24 +70,29 @@ public class LibraryFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub		
+			Bundle savedInstanceState) {	
 		View rootView = inflater.inflate(R.layout.library_fragment, container, false);
 		rootView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT ));
-		getBookList();
+		//getBookList();
 		return rootView;		
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
+		
+		db = DatabaseHelper.getInstance(getActivity());
+		ArrayList<LibraryModel> allLibrary = db.getAllLibrary();
+		ArrayList<ArrayList<LibraryModel>> groupList = groupLibray(allLibrary);
+		verListAdapter = new VerticalAdapter(getActivity(), R.layout.library_row, groupList);
+		ListView list = (ListView)getView().findViewById(R.id.librarylist);
+		list.setAdapter(verListAdapter);
+		verListAdapter.notifyDataSetChanged();
 	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu, inflater);		
 		inflater.inflate(R.menu.menu, menu);
 		 	    
@@ -98,24 +102,23 @@ public class LibraryFragment extends Fragment {
 	    ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
         .setHintTextColor(getResources().getColor(R.color.white));	    
 	    searchView.setOnQueryTextListener(OnQuerySearchView);
-					    	   	    
-		menu.findItem(Menus.ADD).setVisible(true);
+	    
+	    menu.findItem(Menus.ADD).setVisible(false);
 		menu.findItem(Menus.UPDATE).setVisible(true);		
-		menu.findItem(Menus.SEARCH).setVisible(true);		
+		menu.findItem(Menus.SEARCH).setVisible(false);
   	    
 		mSearchCheck = false;	
 	}	
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		
 		switch (item.getItemId()) {
 
 		case Menus.ADD:	    	
 			break;
 		
-		case Menus.UPDATE:	    	
+		case Menus.UPDATE:
+			getBookList();
 			break;
 			
 		case Menus.SEARCH:
@@ -129,13 +132,11 @@ public class LibraryFragment extends Fragment {
 		
 		@Override
 		public boolean onQueryTextSubmit(String arg0) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 		
 		@Override
 		public boolean onQueryTextChange(String arg0) {
-			// TODO Auto-generated method stub
 			if (mSearchCheck){
 				// implement your search here
 			}
@@ -216,8 +217,8 @@ public class LibraryFragment extends Fragment {
 			select("g");
 		
 		for (Group group : groups) {
-		    System.out.println(group.getKey());
-		    System.out.println(group.getGroup());
+		    //System.out.println(group.getKey());
+		    //System.out.println(group.getGroup());
 		    
 		    ArrayList<LibraryModel> obj = new ArrayList<LibraryModel>();
 			for (Object Item : group.getGroup()) {
@@ -284,29 +285,19 @@ public class LibraryFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			DatabaseHelper.getInstance(getActivity()).closeDB();
-			
-			db = DatabaseHelper.getInstance(getActivity());
-			ArrayList<LibraryModel> allLibrary = db.getAllLibrary();
-			ArrayList<ArrayList<LibraryModel>> groupList = groupLibray(allLibrary);
-			verListAdapter = new VerticalAdapter(getActivity(), R.layout.library_row, groupList);		
-			ListView list = (ListView)getView().findViewById(R.id.list);
-			list.setAdapter(verListAdapter);
-			verListAdapter.notifyDataSetChanged();
 		}
 	}
 	
 	private void getBookList(){
 		// Tag used to cancel the request
 		String tag_json_arry = "json_array_req";
-		 
-		String url = "http://192.168.1.9:1223/api/library";
 		         
 		final ProgressDialog pDialog = new ProgressDialog(getActivity());
 		pDialog.setMessage("Loading...");
 		pDialog.show();
 
 		JsonArrayRequest req = new JsonArrayRequest(
-			url,
+			URL_LIBRARY,
 			new Response.Listener<JSONArray>() {
 	            @Override
 	            public void onResponse(JSONArray response) {
