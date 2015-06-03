@@ -35,7 +35,6 @@ import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 public class NewsfeedFragment extends Fragment {
@@ -60,7 +59,8 @@ public class NewsfeedFragment extends Fragment {
 			Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.newsfeed_fragment, container, false);
- 
+        setHasOptionsMenu(true);
+        
         listView = (ListView) rootView.findViewById(R.id.list);
  
         feedItems = new ArrayList<NewsfeedModel>();
@@ -167,7 +167,7 @@ public class NewsfeedFragment extends Fragment {
         .setHintTextColor(getResources().getColor(R.color.white));	    
 	    searchView.setOnQueryTextListener(OnQuerySearchView);
 					    	   	    
-		menu.findItem(Menus.ADD).setVisible(true);
+		menu.findItem(Menus.ADD).setVisible(false);
 		menu.findItem(Menus.UPDATE).setVisible(false);		
 		menu.findItem(Menus.SEARCH).setVisible(true);
   	    

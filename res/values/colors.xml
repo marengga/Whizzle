@@ -9,4 +9,10 @@
     <color name="link">#0a80d1</color>
     <color name="timestamp">#a0a3a7</color>
     
+    <color name="bg_login">#2e3237</color>
+    <color name="input_login">#222222</color>
+    <color name="input_login_hint">#999999</color>
+    <color name="btn_login">#ffffff</color>
+    <color name="btn_login_bg">#26ae90</color>
+    
 </resources>

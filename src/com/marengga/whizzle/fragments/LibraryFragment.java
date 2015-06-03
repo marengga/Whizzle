@@ -19,7 +19,6 @@ import org.quaere.Group;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.marengga.whizzle.R;
 import com.marengga.whizzle.utils.Constant;
@@ -69,6 +68,12 @@ public class LibraryFragment extends Fragment {
 	}
 	
 	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {	
 		View rootView = inflater.inflate(R.layout.library_fragment, container, false);
@@ -80,7 +85,6 @@ public class LibraryFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setHasOptionsMenu(true);
 		
 		db = DatabaseHelper.getInstance(getActivity());
 		ArrayList<LibraryModel> allLibrary = db.getAllLibrary();
@@ -216,10 +220,7 @@ public class LibraryFragment extends Fragment {
 			group("library").by("library.getCategory()").into("g").
 			select("g");
 		
-		for (Group group : groups) {
-		    //System.out.println(group.getKey());
-		    //System.out.println(group.getGroup());
-		    
+		for (Group group : groups) {		    
 		    ArrayList<LibraryModel> obj = new ArrayList<LibraryModel>();
 			for (Object Item : group.getGroup()) {
 				obj.add((LibraryModel) Item);
@@ -285,6 +286,7 @@ public class LibraryFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			DatabaseHelper.getInstance(getActivity()).closeDB();
+			onActivityCreated(null);
 		}
 	}
 	
@@ -303,19 +305,17 @@ public class LibraryFragment extends Fragment {
 	            public void onResponse(JSONArray response) {
 	                Log.d("VOLLEY", "Udah dapet respon dari server library : " + response.toString());
 	                pDialog.hide();
-
 	                new HandleResponseAsyncTask().execute(response);
 	            }
 	        },
 	        new Response.ErrorListener() {
 	            @Override
 	            public void onErrorResponse(VolleyError error) {
-	                VolleyLog.e("VOLLEY", "Error waktu ngrefresh library : " + error.getMessage());
+	                Log.e("VOLLEY", "Error waktu ngrefresh library : " + error.getMessage());
 	                pDialog.hide();
 	                Toast.makeText(getActivity(), "An error occured : " + error.getMessage(), Toast.LENGTH_LONG).show();
 	            }
 	        });
-		 
 		// Adding request to request queue
 		AppController.getInstance().addToRequestQueue(req, tag_json_arry);
 	}

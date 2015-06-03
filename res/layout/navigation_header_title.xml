@@ -12,9 +12,6 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
         android:singleLine="true"
         android:text=""
         android:textColor="@color/white" />
@@ -33,6 +30,7 @@
         android:layout_width="8dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:visibility="gone"
         android:background="@color/blue_dark" />

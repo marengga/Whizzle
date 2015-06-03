@@ -19,13 +19,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  
     // Database Name
     private static final String DATABASE_NAME = "WhizzleDB";
- 
+    
+    // #region Table Definitions
+    
     // Table Names
     private static final String TABLE_LIBRARY = "Library";
     private static final String TABLE_PROFILE = "Profile";
     private static final String TABLE_NEWS = "News";
     private static final String TABLE_USER = "User";
     private static final String TABLE_TEAM = "Team";
+    private static final String TABLE_USERTEAM = "UserTeam";
     private static final String TABLE_PIN = "Pin";
  
     // Library Table Column Names
@@ -39,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String PRF_ID = "UserId";
     private static final String PRF_NAME = "FullName";
     private static final String PRF_DEPT = "Department";
+    private static final String PRF_STATUS = "Status";
     private static final String PRF_AVATAR = "Avatar";
     
 	private static final String NWS_ID = "NewsId";
@@ -54,13 +58,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String USR_DEPT = "Department";
 	private static final String USR_AVATAR = "Avatar";
 	private static final String USR_STATUS = "Status";
-	private static final String USR_TEAMID = "TeamId";
 	private static final String USR_ISFRIEND = "IsFriend";
 	
 	private static final String TIM_ID = "TeamId";
 	private static final String TIM_NAME = "Name";
 	private static final String TIM_DESC = "Description";
 	private static final String TIM_AVATAR = "Avatar";
+	
+	private static final String UTM_USER = "UserId";
+	private static final String UTM_TEAM = "TeamId";
 	
 	private static final String PIN_ID = "PinId";
 	private static final String PIN_TEAM = "TeamId";
@@ -73,53 +79,91 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     
     // Create Table SQL Statements
-	private static final String CREATE_LIBRARY = "CREATE TABLE "
-	    + TABLE_LIBRARY + "(" + LIB_ID + " TEXT PRIMARY KEY, " +
+	private static final String CREATE_LIBRARY = "CREATE TABLE " +
+			TABLE_LIBRARY + "(" + LIB_ID + " TEXT PRIMARY KEY, " +
 	    	LIB_CATEGORY + " TEXT," +
 	    	LIB_TITLE + " TEXT," +
 	    	LIB_AUTHOR + " TEXT," +
 	    	LIB_DESCRIPTION + " TEXT," +
 	    	LIB_COVER + " BLOB" +
 		")";
-	private static final String CREATE_PROFILE = "CREATE TABLE "
-		    + TABLE_PROFILE + "(" + PRF_ID + " TEXT PRIMARY KEY, " +
-				PRF_NAME + " TEXT, "+
-				PRF_DEPT + " TEXT, "+
-		    	PRF_AVATAR + " BLOB" +
-			")";
-	private static final String CREATE_NEWS = "CREATE TABLE "
-		    + TABLE_NEWS + "(" + NWS_ID + " TEXT PRIMARY KEY, " +
-			    NWS_AUTHOR + " TEXT, "+
-			    NWS_PUBLISHED + " TEXT, "+
-			    NWS_CATEGORY + " INT, "+
-			    NWS_TITLE + " TEXT, "+
-			    NWS_CONTENT + " TEXT, "+
-			    NWS_IMG + " TEXT"+
-			")";
-	private static final String CREATE_USER = "CREATE TABLE "
-		    + TABLE_USER + "(" + USR_ID + " TEXT PRIMARY KEY, "+
-				USR_NAME + " TEXT, "+
-				USR_DEPT + " TEXT, "+
-				USR_AVATAR + " BLOB, "+
-				USR_STATUS + " TEXT, "+
-				USR_TEAMID + " TEXT, "+
-				USR_ISFRIEND + " BOOL, "+
-	")";
+	private static final String CREATE_PROFILE = "CREATE TABLE " +
+			TABLE_PROFILE + "(" + PRF_ID + " TEXT PRIMARY KEY, " +
+			PRF_NAME + " TEXT, "+
+			PRF_DEPT + " TEXT, "+
+			PRF_STATUS + " TEXT, "+
+		    PRF_AVATAR + " BLOB" +
+		")";
+	private static final String CREATE_NEWS = "CREATE TABLE " +
+			TABLE_NEWS + "(" + NWS_ID + " TEXT PRIMARY KEY, " +
+			NWS_AUTHOR + " TEXT, "+
+			NWS_PUBLISHED + " NUMERIC, "+
+			NWS_CATEGORY + " INT, "+
+			NWS_TITLE + " TEXT, "+
+			NWS_CONTENT + " TEXT, "+
+			NWS_IMG + " TEXT"+
+		")";
+	private static final String CREATE_USER = "CREATE TABLE " +
+			TABLE_USER + "(" + USR_ID + " TEXT PRIMARY KEY, "+
+			USR_NAME + " TEXT, "+
+			USR_DEPT + " TEXT, "+
+			USR_AVATAR + " BLOB, "+
+			USR_STATUS + " TEXT, "+
+			USR_ISFRIEND + " BOOL "+
+		")";
+	private static final String CREATE_TEAM = "CREATE TABLE " +
+			TABLE_TEAM + "(" + USR_ID + " TEXT PRIMARY KEY, "+
+			TIM_ID + " TEXT, "+
+			TIM_NAME + " TEXT, "+
+			TIM_DESC + " TEXT, "+
+			TIM_AVATAR + " TEXT "+
+		")";
+	private static final String CREATE_USERTEAM = "CREATE TABLE " +
+			TABLE_USERTEAM + "("+ UTM_TEAM + " TEXT, "+
+			UTM_USER + " TEXT, "+
+			"PRIMARY KEY (" + UTM_TEAM + "," + UTM_USER + ")"+
+		")";
+	private static final String CREATE_PIN = "CREATE TABLE " +
+			TABLE_PIN + "(" + USR_ID + " TEXT PRIMARY KEY, "+
+			PIN_ID + " TEXT, "+
+			PIN_TEAM + " TEXT, "+
+			PIN_TITLE + " TEXT, "+
+			PIN_DESC + " TEXT, "+
+			PIN_ASSIGNEE + " TEXT, "+
+			PIN_DUE + " NUMERIC, "+
+			PIN_PRIORITY + " NUMERIC, "+
+			PIN_STATUSCODE + " NUMERIC "+
+		")";
 	
+	// #endregion
+			
+	// #region OnCreate and Upgrade
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_LIBRARY);
+		db.execSQL(CREATE_PROFILE);
+		db.execSQL(CREATE_NEWS);
+		db.execSQL(CREATE_USER);
+		db.execSQL(CREATE_TEAM);
+		db.execSQL(CREATE_USERTEAM);
+		db.execSQL(CREATE_PIN);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_LIBRARY);
- 
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROFILE);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NEWS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAM);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERTEAM);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PIN);
         // create new tables
         onCreate(db);
 	}
+	// #endregion
 	
-	// ------------------------ "Library" table methods ----------------//
+	// #region Library
 	
 	public long createLibrary(LibraryModel lib) {
 		long library_id = -1;
@@ -134,8 +178,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    values.put(LIB_AUTHOR, lib.getAuthor());
 	    values.put(LIB_DESCRIPTION, lib.getDescription());
 	    values.put(LIB_COVER, lib.getCover());
-	    
-	    //library_id = db.insert(TABLE_LIBRARY, null, values);
 	    
 	    library_id = db.insertWithOnConflict(TABLE_LIBRARY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		
@@ -190,6 +232,266 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	    return libs;
 	}
+	
+	// #endregion
+	
+	// #region Profile
+	
+	public long createProfile(ProfileModel p) {
+		long profileId = -1;
+		
+		Log.d(TAG, "Inserting Profile");
+		
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    ContentValues values = new ContentValues();
+	    values.put(PRF_ID, p.getUserId());
+	    values.put(PRF_NAME, p.getFullName());
+	    values.put(PRF_DEPT, p.getDepartment());
+	    values.put(PRF_STATUS, p.getStatus());
+	    values.put(PRF_AVATAR, p.getAvatar());
+	    
+	    profileId = db.insertWithOnConflict(TABLE_PROFILE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		
+		return profileId;
+	}
+
+	public ProfileModel getProfileDetail() {
+	    SQLiteDatabase db = this.getReadableDatabase();
+
+	    String selectQuery = "SELECT * FROM " + TABLE_PROFILE;
+
+	    Log.d(TAG, "Getting Profile Detail : " + selectQuery);
+
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c != null)
+	        c.moveToFirst();
+	    
+	    ProfileModel p = new ProfileModel();
+	    p.setAvatar(c.getBlob(c.getColumnIndex(PRF_AVATAR)));
+	    p.setDepartment(c.getString(c.getColumnIndex(PRF_DEPT)));
+	    p.setFullName(c.getString(c.getColumnIndex(PRF_NAME)));
+	    p.setStatus(c.getString(c.getColumnIndex(PRF_STATUS)));
+	    p.setUserId(c.getString(c.getColumnIndex(PRF_ID)));
+
+	    return p;
+	}
+	
+	public int updateStatus(String status){
+		SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(PRF_STATUS, status);
+        // updating row
+        return db.update(TABLE_PROFILE, values, null, null );
+	}
+	
+	public int updateAvatar(byte[] avatar) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(PRF_AVATAR, avatar);
+        return db.update(TABLE_PROFILE, values, null, null );
+    }
+	
+	// #endregion
+
+	// #region User
+	public long createUser(UserModel u) {
+		long library_id = -1;
+		
+		Log.d(TAG, "Inserting User");
+		
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    ContentValues values = new ContentValues();
+	    values.put(USR_AVATAR, u.getAvatar());
+	    values.put(USR_DEPT, u.getDepartment());
+	    values.put(USR_ID, u.getUserId());
+	    values.put(USR_ISFRIEND, u.getIsFriend());
+	    values.put(USR_NAME, u.getFullName());
+	    values.put(USR_STATUS, u.getStatus());
+	    
+	    library_id = db.insertWithOnConflict(TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		
+		return library_id;
+	}
+	
+	public void deleteUsers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        Log.d(TAG, "Deleting All User from DB");
+        
+        db.delete(TABLE_USER, null, null);
+        db.close();
+    }
+
+	public UserModel getUser(String UserId) {
+	    SQLiteDatabase db = this.getReadableDatabase();
+
+	    String selectQuery = "SELECT  * FROM " + TABLE_USER + " WHERE " + USR_ID + " = " + UserId;
+
+	    Log.d(TAG, "Getting User : " + selectQuery);
+
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c != null)
+	        c.moveToFirst();
+	    
+	    UserModel u = new UserModel();
+	    u.setAvatar(c.getBlob(c.getColumnIndex(USR_AVATAR)));
+	    u.setDepartment(c.getString(c.getColumnIndex(USR_DEPT)));
+	    u.setFullName(c.getString(c.getColumnIndex(USR_NAME)));
+	    u.setIsFriend( c.getInt(c.getColumnIndex(USR_ISFRIEND))!=0 );
+	    u.setStatus(c.getString(c.getColumnIndex(USR_STATUS)));
+	    u.setUserId(c.getString(c.getColumnIndex(USR_ID)));
+
+	    return u;
+	}
+
+	public ArrayList<UserModel> getAllContact() {
+	    ArrayList <UserModel> us = new ArrayList <UserModel> ();
+	    String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE "+USR_ISFRIEND+"=1";
+
+	    Log.d(TAG, "Getting All Contacts : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	UserModel u = new UserModel();
+	    	    u.setAvatar(c.getBlob(c.getColumnIndex(USR_AVATAR)));
+	    	    u.setDepartment(c.getString(c.getColumnIndex(USR_DEPT)));
+	    	    u.setFullName(c.getString(c.getColumnIndex(USR_NAME)));
+	    	    u.setIsFriend(c.getInt(c.getColumnIndex(USR_ISFRIEND))!=0);
+	    	    u.setStatus(c.getString(c.getColumnIndex(USR_STATUS)));
+	    	    u.setUserId(c.getString(c.getColumnIndex(USR_ID)));
+	            us.add(u);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
+	
+	public ArrayList<UserModel> getTeamMember(String TeamId) {
+	    ArrayList <UserModel> us = new ArrayList <UserModel> ();
+	    String selectQuery = "SELECT u.* "+
+	    		"FROM " + TABLE_USER + " u " +
+	    		"INNER JOIN " + TABLE_USERTEAM + " ut "+ 
+	    			" ON u." + USR_ID + "=ut." + UTM_USER + 
+	    		"WHERE ut." + UTM_TEAM + "=" + TeamId;
+
+	    Log.d(TAG, "Getting All Team Member : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	UserModel u = new UserModel();
+	    	    u.setAvatar(c.getBlob(c.getColumnIndex(USR_AVATAR)));
+	    	    u.setDepartment(c.getString(c.getColumnIndex(USR_DEPT)));
+	    	    u.setFullName(c.getString(c.getColumnIndex(USR_NAME)));
+	    	    u.setIsFriend(c.getInt(c.getColumnIndex(USR_ISFRIEND))!=0);
+	    	    u.setStatus(c.getString(c.getColumnIndex(USR_STATUS)));
+	    	    u.setUserId(c.getString(c.getColumnIndex(USR_ID)));
+	            us.add(u);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
+	// #endregion
+	
+	// #region UserTeam
+	public long createUserTeam(UserTeamModel ut) {
+		long library_id = -1;
+		
+		Log.d(TAG, "Inserting UserTeam");
+		
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    ContentValues values = new ContentValues();
+	    values.put(UTM_TEAM, ut.getTeamId());
+	    values.put(UTM_USER, ut.getUserId());
+	    
+	    library_id = db.insertWithOnConflict(TABLE_USERTEAM, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		
+		return library_id;
+	}
+	// #endregion
+
+	// #region Team
+	public long createTeam(TeamModel t) {
+		long library_id = -1;
+		
+		Log.d(TAG, "Inserting Team");
+		
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    ContentValues values = new ContentValues();
+	    values.put(TIM_AVATAR, t.getAvatar());
+	    values.put(TIM_DESC, t.getDescription());
+	    values.put(TIM_ID, t.getTeamId());
+	    values.put(TIM_NAME, t.getName());
+	    
+	    library_id = db.insertWithOnConflict(TABLE_TEAM, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		
+		return library_id;
+	}
+
+	public TeamModel getTeam(String TeamId) {
+	    SQLiteDatabase db = this.getReadableDatabase();
+
+	    String selectQuery = "SELECT  * FROM " + TABLE_TEAM + " WHERE " + TIM_ID + " = " + TeamId;
+
+	    Log.d(TAG, "Getting Team : " + selectQuery);
+
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c != null)
+	        c.moveToFirst();
+	    
+	    TeamModel t = new TeamModel();
+	    t.setAvatar(c.getBlob(c.getColumnIndex(TIM_AVATAR)));
+	    t.setDescription(c.getString(c.getColumnIndex(TIM_DESC)));
+	    t.setName(c.getString(c.getColumnIndex(TIM_NAME)));
+	    t.setTeamId(c.getString(c.getColumnIndex(TIM_ID)));
+
+	    return t;
+	}
+
+	public ArrayList<TeamModel> getAllTeam() {
+	    ArrayList <TeamModel> us = new ArrayList <TeamModel> ();
+	    String selectQuery = "SELECT * FROM " + TABLE_TEAM;
+
+	    Log.d(TAG, "Getting All Team : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	TeamModel t = new TeamModel();
+	    	    t.setAvatar(c.getBlob(c.getColumnIndex(TIM_AVATAR)));
+	    	    t.setDescription(c.getString(c.getColumnIndex(TIM_DESC)));
+	    	    t.setName(c.getString(c.getColumnIndex(TIM_NAME)));
+	    	    t.setTeamId(c.getString(c.getColumnIndex(TIM_ID)));
+	            us.add(t);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
+	// #endregion
+	
+	public void clearAllData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        Log.d(TAG, "Deleting Everything !");
+        
+        db.delete(TABLE_LIBRARY, null, null);
+        db.delete(TABLE_NEWS, null, null);
+        db.delete(TABLE_PIN, null, null);
+        db.delete(TABLE_PROFILE, null, null);
+        db.delete(TABLE_TEAM, null, null);
+        db.delete(TABLE_USER, null, null);
+        db.delete(TABLE_USERTEAM, null, null);
+        db.close();
+    }
 	
 	public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
