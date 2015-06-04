@@ -3,7 +3,7 @@
     package="com.marengga.whizzle"
     android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="1.0.5" >
+    android:versionName="1.0.5">
     
     <uses-sdk
         android:minSdkVersion="15"

@@ -80,6 +80,7 @@
             android:background="@color/white"
             android:scaleType="fitXY"
             android:visibility="visible" />
+        
     </LinearLayout>
  
 </LinearLayout>

@@ -108,6 +108,7 @@ int attr textAppearanceSmallPopupMenu 0x7f010011
 int attr textColorSearchUrl 0x7f010064
 int attr title 0x7f010021
 int attr titleTextStyle 0x7f010026
+int attr trimLength 0x7f01006a
 int attr windowActionBar 0x7f010000
 int attr windowActionBarOverlay 0x7f010001
 int attr windowSplitActionBar 0x7f010002
@@ -643,6 +644,8 @@ int styleable ActivityChooserView_expandActivityOverflowButtonDrawable 1
 int styleable ActivityChooserView_initialActivityCount 0
 int[] styleable CompatTextView { 0x7f010069 }
 int styleable CompatTextView_textAllCaps 0
+int[] styleable ExpandableTextView { 0x7f01006a }
+int styleable ExpandableTextView_trimLength 0
 int[] styleable LinearLayoutICS { 0x7f01002a, 0x7f010051, 0x7f010052 }
 int styleable LinearLayoutICS_divider 0
 int styleable LinearLayoutICS_dividerPadding 2
