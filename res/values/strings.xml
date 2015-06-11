@@ -25,4 +25,6 @@
     
     <string name="hint_userid">Employee No</string>
     <string name="btn_login">LOGIN</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="hint_status">Enter your status message ..</string>
 </resources >

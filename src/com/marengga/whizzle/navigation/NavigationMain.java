@@ -5,9 +5,11 @@ import java.util.List;
 
 import com.marengga.whizzle.adapter.NavigationAdapter;
 import com.marengga.whizzle.data.DatabaseHelper;
+import com.marengga.whizzle.fragments.ContactFragment;
 import com.marengga.whizzle.fragments.LibraryFragment;
 import com.marengga.whizzle.fragments.NewsfeedFragment;
 import com.marengga.whizzle.fragments.AboutFragment;
+import com.marengga.whizzle.fragments.ProfileFragment;
 import com.marengga.whizzle.utils.Constant;
 import com.marengga.whizzle.utils.Menus;
 import com.marengga.whizzle.utils.SessionManager;
@@ -129,8 +131,15 @@ public class NavigationMain extends ActionBarActivity{
 		case Constant.MENU_LIBRARY:			
 			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_LIBRARY));
 			break;
+		case Constant.MENU_CONTACT:
+			mFragment = new ContactFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_CONTACT));
+			break;
+		case Constant.MENU_SETTING:
+			mFragment = new ProfileFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_SETTING));
+			break;
 		case Constant.MENU_ABOUT:
 			mFragment = new AboutFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_ABOUT));
+			break;
 		}
 		
 		if (mFragment != null){
@@ -269,7 +278,7 @@ public class NavigationMain extends ActionBarActivity{
 		}
 	};
 	
-	private void logout() {
+	public void logout() {
 		session.setLogin(false);
    	 
         DatabaseHelper.getInstance(getApplicationContext()).clearAllData();

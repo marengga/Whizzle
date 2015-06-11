@@ -78,7 +78,6 @@ public class LibraryFragment extends Fragment {
 			Bundle savedInstanceState) {	
 		View rootView = inflater.inflate(R.layout.library_fragment, container, false);
 		rootView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT ));
-		//getBookList();
 		return rootView;		
 	}
 	
@@ -230,6 +229,36 @@ public class LibraryFragment extends Fragment {
 		return groupList;
 	}
 	
+	private void getBookList(){
+		// Tag used to cancel the request
+		String tag_json_arry = "json_array_req";
+		         
+		final ProgressDialog pDialog = new ProgressDialog(getActivity());
+		pDialog.setMessage("Loading...");
+		pDialog.show();
+
+		JsonArrayRequest req = new JsonArrayRequest(
+			URL_LIBRARY,
+			new Response.Listener<JSONArray>() {
+	            @Override
+	            public void onResponse(JSONArray response) {
+	                Log.d("VOLLEY", "Udah dapet respon dari server library : " + response.toString());
+	                pDialog.hide();
+	                new HandleResponseAsyncTask().execute(response);
+	            }
+	        },
+	        new Response.ErrorListener() {
+	            @Override
+	            public void onErrorResponse(VolleyError error) {
+	                Log.e("VOLLEY", "Error waktu ngrefresh library : " + error.getMessage());
+	                pDialog.hide();
+	                Toast.makeText(getActivity(), "An error occured : " + error.getMessage(), Toast.LENGTH_LONG).show();
+	            }
+	        });
+		// Adding request to request queue
+		AppController.getInstance().addToRequestQueue(req, tag_json_arry);
+	}
+	
 	private class HandleResponseAsyncTask extends AsyncTask < JSONArray, String, Void > {
 		@Override
 		protected void onPreExecute() {
@@ -288,35 +317,5 @@ public class LibraryFragment extends Fragment {
 			DatabaseHelper.getInstance(getActivity()).closeDB();
 			onActivityCreated(null);
 		}
-	}
-	
-	private void getBookList(){
-		// Tag used to cancel the request
-		String tag_json_arry = "json_array_req";
-		         
-		final ProgressDialog pDialog = new ProgressDialog(getActivity());
-		pDialog.setMessage("Loading...");
-		pDialog.show();
-
-		JsonArrayRequest req = new JsonArrayRequest(
-			URL_LIBRARY,
-			new Response.Listener<JSONArray>() {
-	            @Override
-	            public void onResponse(JSONArray response) {
-	                Log.d("VOLLEY", "Udah dapet respon dari server library : " + response.toString());
-	                pDialog.hide();
-	                new HandleResponseAsyncTask().execute(response);
-	            }
-	        },
-	        new Response.ErrorListener() {
-	            @Override
-	            public void onErrorResponse(VolleyError error) {
-	                Log.e("VOLLEY", "Error waktu ngrefresh library : " + error.getMessage());
-	                pDialog.hide();
-	                Toast.makeText(getActivity(), "An error occured : " + error.getMessage(), Toast.LENGTH_LONG).show();
-	            }
-	        });
-		// Adding request to request queue
-		AppController.getInstance().addToRequestQueue(req, tag_json_arry);
 	}
 }

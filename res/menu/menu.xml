@@ -18,5 +18,5 @@
         android:id="@+id/menu_update"
         android:icon="@drawable/ic_action_update"
         android:title="@string/update"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 </menu>

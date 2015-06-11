@@ -8,6 +8,7 @@
         android:id="@+id/bookCover"
         android:layout_width="120dip"
         android:layout_height="130dip"
+        android:tag="asuuuu !"
         android:contentDescription="@string/book_label" />
 
 </LinearLayout>

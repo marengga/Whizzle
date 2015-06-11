@@ -14,5 +14,6 @@
     <color name="input_login_hint">#999999</color>
     <color name="btn_login">#ffffff</color>
     <color name="btn_login_bg">#26ae90</color>
+	<color name="btn_logout_bg">#ff6861</color>
     
 </resources>

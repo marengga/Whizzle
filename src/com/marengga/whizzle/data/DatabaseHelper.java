@@ -278,18 +278,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public int updateStatus(String status){
+		Log.d(TAG, "Updating Status : " + status);
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PRF_STATUS, status);
         // updating row
-        return db.update(TABLE_PROFILE, values, null, null );
+        int r = db.update(TABLE_PROFILE, values, null, null );
+        return r;
 	}
 	
 	public int updateAvatar(byte[] avatar) {
+		Log.d(TAG, "Updating Avatar : " + String.valueOf(avatar));
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PRF_AVATAR, avatar);
-        return db.update(TABLE_PROFILE, values, null, null );
+        int r = db.update(TABLE_PROFILE, values, null, null );
+        return r;
     }
 	
 	// #endregion
@@ -348,7 +352,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public ArrayList<UserModel> getAllContact() {
 	    ArrayList <UserModel> us = new ArrayList <UserModel> ();
-	    String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE "+USR_ISFRIEND+"=1";
+	    String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE "+USR_ISFRIEND+"=1 " +
+	    		"ORDER BY "+USR_NAME;
 
 	    Log.d(TAG, "Getting All Contacts : " + selectQuery);
 
