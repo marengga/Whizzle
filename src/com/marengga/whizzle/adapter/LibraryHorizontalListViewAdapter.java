@@ -2,6 +2,7 @@ package com.marengga.whizzle.adapter;
 
 import java.util.LinkedList;
 import java.util.Queue;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
-import android.widget.Toast;
 
 public class LibraryHorizontalListViewAdapter extends AdapterView<ListAdapter> {
 
@@ -340,12 +340,12 @@ public class LibraryHorizontalListViewAdapter extends AdapterView<ListAdapter> {
 					if(mOnItemClicked != null){
 						mOnItemClicked.onItemClick(LibraryHorizontalListViewAdapter.this, child, mLeftViewIndex + 1 + i, mAdapter.getItemId( mLeftViewIndex + 1 + i ));
 						
-						Toast.makeText(getContext(), "On Item Clicked", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getContext(), "On Item Clicked", Toast.LENGTH_SHORT).show();
 					}
 					if(mOnItemSelected != null){
 						mOnItemSelected.onItemSelected(LibraryHorizontalListViewAdapter.this, child, mLeftViewIndex + 1 + i, mAdapter.getItemId( mLeftViewIndex + 1 + i ));
 						
-						Toast.makeText(getContext(), "On Item Selected", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getContext(), "On Item Selected", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				}

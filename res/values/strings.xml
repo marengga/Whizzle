@@ -27,4 +27,14 @@
     <string name="btn_login">LOGIN</string>
     <string name="btn_logout">LOGOUT</string>
     <string name="hint_status">Enter your status message ..</string>
+    
+    <string name="lib_category">Category</string>
+    <string name="lib_title">Title</string>
+    <string name="lib_author">Author</string>
+    <string name="lib_description">Description</string>
+    <string name="lib_dummy">: asuuuuu</string>
+    
+    <string name="download">Download</string>
+    <string name="read">Read</string>
+    <string name="close">Close</string>
 </resources >

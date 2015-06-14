@@ -12,7 +12,7 @@ public class Utils {
 		R.drawable.ic_action_library, 	// library
 		R.drawable.ic_action_message,	// message
 		R.drawable.ic_action_team,	 	// team
-		R.drawable.ic_action_contact, 		// contacts
+		R.drawable.ic_action_contact, 	// contacts
 		R.drawable.ic_action_chat, 		// chat
 		0, 
 		R.drawable.ic_action_settings,	// settings
