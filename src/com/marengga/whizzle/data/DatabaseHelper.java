@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_TEAM = "Team";
     private static final String TABLE_USERTEAM = "UserTeam";
     private static final String TABLE_PIN = "Pin";
+    private static final String TABLE_MESSAGE = "Message";
  
     // Library Table Column Names
     private static final String LIB_ID = "LibraryId";
@@ -76,7 +77,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String PIN_DUE = "DueDate";
 	private static final String PIN_PRIORITY = "Priority";
 	private static final String PIN_STATUSCODE = "StatusCode";
-    
+	
+	private static final String MSG_ID = "MessageId";
+	private static final String MSG_SENDER = "Sender";
+	private static final String MSG_SENT = "Sent";
+	private static final String MSG_REC_USER = "RecipientUser";
+	private static final String MSG_REC_GROUP = "RecipientGroup";
+	private static final String MSG_MESSAGE = "Message";
+	private static final String MSG_EXPIRED = "Expired";
+	private static final String MSG_STATUS = "StatusCode";
     
     // Create Table SQL Statements
 	private static final String CREATE_LIBRARY = "CREATE TABLE " +
@@ -134,6 +143,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			PIN_PRIORITY + " NUMERIC, "+
 			PIN_STATUSCODE + " NUMERIC "+
 		")";
+	private static final String CREATE_MESSAGE = "CREATE TABLE " +
+			TABLE_MESSAGE + "(" + MSG_ID + " TEXT PRIMARY KEY, "+
+			MSG_SENDER + " TEXT, "+
+			MSG_SENT + " NUMERIC, "+
+			MSG_REC_USER + " TEXT, "+
+			MSG_REC_GROUP + " TEXT, "+
+			MSG_MESSAGE + " TEXT, "+
+			MSG_EXPIRED + " NUMERIC, "+
+			MSG_STATUS + " NUMERIC "+
+		")";
 	
 	// #endregion
 			
@@ -147,6 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TEAM);
 		db.execSQL(CREATE_USERTEAM);
 		db.execSQL(CREATE_PIN);
+		db.execSQL(CREATE_MESSAGE);
 	}
 
 	@Override
@@ -158,6 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAM);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERTEAM);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PIN);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
         // create new tables
         onCreate(db);
 	}
@@ -483,6 +504,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	// #endregion
 	
+	// #region Message
+	public long createMessage(MessageModel m) {
+		long msdig = -1;
+		
+		Log.d(TAG, "Inserting Message");
+		
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    ContentValues values = new ContentValues();
+	    values.put(MSG_EXPIRED, m.getExpired().toString());
+	    values.put(MSG_ID, m.getMessageId());
+	    values.put(MSG_MESSAGE, m.getMessage());
+	    values.put(MSG_REC_GROUP, m.getRecipientGroup());
+	    values.put(MSG_REC_USER, m.getRecipientUser());
+	    values.put(MSG_SENDER, m.getSender());
+	    values.put(MSG_SENT, m.getSent().toString());
+	    values.put(MSG_STATUS, m.getStatusCode());
+	    
+	    msdig = db.insertWithOnConflict(TABLE_MESSAGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		
+		return msdig;
+	}
+	public ArrayList<ChatModel> getMessageByUser(String UserId) {
+	    ArrayList <ChatModel> us = new ArrayList <ChatModel> ();
+	    String selectQuery = "SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
+	    		" CASE WHEN m." + MSG_REC_USER + "='" + UserId + "' THEN 1 ELSE 0 END as IsMe" + 
+	    		" FROM " + TABLE_MESSAGE + " m " +
+	    		" INNER JOIN " + TABLE_USER + " u " +
+	    			" ON m." + MSG_SENDER + " = u." + USR_ID + 
+	    			" OR m." + MSG_REC_USER + " = u." + USR_ID +
+	    		" WHERE " + MSG_SENDER + "='" + UserId + "' OR " + MSG_REC_USER + "='" + UserId + "'";
+
+	    Log.d(TAG, "Getting All Message by User : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	ChatModel t = new ChatModel();
+	        	t.setIsMe(c.getInt(c.getColumnIndex("IsMe")) == 1 ? true : false);
+	        	t.setMessage(c.getString(c.getColumnIndex(MSG_MESSAGE)));
+	        	if(t.getIsMe())
+	        		t.setUsername("Me");
+	        	else
+	        		t.setUsername(c.getString(c.getColumnIndex(USR_NAME)));
+				t.setSent(c.getString(c.getColumnIndex(MSG_SENT)));
+	        	t.setStatusCode(c.getInt(c.getColumnIndex(MSG_STATUS)));
+	            us.add(t);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
+	// #endregion
 	public void clearAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         
@@ -495,6 +569,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_TEAM, null, null);
         db.delete(TABLE_USER, null, null);
         db.delete(TABLE_USERTEAM, null, null);
+        db.delete(TABLE_MESSAGE, null, null);
         db.close();
     }
 	

@@ -2,15 +2,15 @@
 <resources>
 
     <string-array name="nav_menu_items">
-        <item></item>
+        <item>Whizzle</item>
         <item>News Feed</item>
         <item>Library</item>
-        <item>Message</item>
-        <item>Team</item>
+        <item>Messages</item>
+        <item>Teams</item>
         <item>Contacts</item>
-        <item>Chat</item>
-        <item></item>
+        <item>Chats</item>
         <item>Settings</item>
+        <item>Setting</item>
         <item>About</item>
     </string-array>       
 </resources>

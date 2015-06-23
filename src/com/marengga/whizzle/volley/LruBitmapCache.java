@@ -28,12 +28,12 @@ public class LruBitmapCache extends LruCache<String, Bitmap> implements
     }
  
     @Override
-    public Bitmap getBitmap(String url) {
-        return get(url);
+    public Bitmap getBitmap(String key) {
+        return get(key);
     }
  
     @Override
-    public void putBitmap(String url, Bitmap bitmap) {
-        put(url, bitmap);
+    public void putBitmap(String key, Bitmap bitmap) {
+        put(key, bitmap);
     }
 }

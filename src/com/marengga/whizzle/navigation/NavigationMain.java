@@ -7,6 +7,7 @@ import com.marengga.whizzle.adapter.NavigationAdapter;
 import com.marengga.whizzle.data.DatabaseHelper;
 import com.marengga.whizzle.fragments.ContactFragment;
 import com.marengga.whizzle.fragments.LibraryFragment;
+import com.marengga.whizzle.fragments.LoginActivity;
 import com.marengga.whizzle.fragments.NewsfeedFragment;
 import com.marengga.whizzle.fragments.AboutFragment;
 import com.marengga.whizzle.fragments.ProfileFragment;

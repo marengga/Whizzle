@@ -35,6 +35,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.marengga.whizzle.R;
 import com.marengga.whizzle.utils.Constant;
 import com.marengga.whizzle.utils.Menus;
+import com.marengga.whizzle.volley.LruBitmapCache;
 import com.marengga.whizzle.data.DatabaseHelper;
 import com.marengga.whizzle.data.LibraryModel;
 import com.marengga.whizzle.adapter.LibraryHorizontalListViewAdapter;
@@ -80,9 +81,10 @@ public class LibraryFragment extends Fragment {
 	private VerticalAdapter verListAdapter;
 	DatabaseHelper db;
 	private String URL_LIBRARY = Constant.BASE_API_URL+"library/";
-	private String URL_LIBRARY_DOWNLOAD = Constant.BASE_API_URL+"file/library/";
+	private String URL_LIBRARY_DOWNLOAD = Constant.BASE_LIBRARY_URL;
 	private String LIBRARY_FOLDER = Environment.getExternalStorageDirectory().getPath() + "/Whizzle/Library/";
 	private ProgressDialog pDialog;
+	private LruBitmapCache mLruBitmapCache;
 	
 	public LibraryFragment newInstance(String text){
 		LibraryFragment mFragment = new LibraryFragment();		
@@ -117,6 +119,8 @@ public class LibraryFragment extends Fragment {
 		ListView list = (ListView)getView().findViewById(R.id.librarylist);
 		list.setAdapter(verListAdapter);				
 		verListAdapter.notifyDataSetChanged();
+		
+		mLruBitmapCache = new LruBitmapCache();
 	}
 	
 	@Override
@@ -136,7 +140,7 @@ public class LibraryFragment extends Fragment {
 		menu.findItem(Menus.SEARCH).setVisible(false);
   	    
 		mSearchCheck = false;	
-	}	
+	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -207,7 +211,7 @@ public class LibraryFragment extends Fragment {
 					LinearLayout x = (LinearLayout) view;
 				    ImageView t = (ImageView) x.findViewById(R.id.bookCover);
 				    LibraryModel l =  (LibraryModel) t.getTag();
-				    final String downloadUrl = URL_LIBRARY_DOWNLOAD + l.getLibraryId();
+				    final String downloadUrl = URL_LIBRARY_DOWNLOAD + l.getLibraryId() + ".pdf";
 				    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
 						.setTitle(l.getTitle())
 						.setMessage(l.getDescription()+"\n\nAuthor : "+l.getAuthor())
@@ -264,13 +268,22 @@ public class LibraryFragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View retval = LayoutInflater.from(getContext()).inflate(this.resource, null);
-			
 			ImageView bookCover = (ImageView) retval.findViewById(R.id.bookCover);
-			
-			byte[] imageBytes = getItem(position).getCover();
-			Bitmap pic = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-			bookCover.setImageBitmap(pic);
-			
+			try{
+				String imgKey = getItem(position).getLibraryId().toString();
+				if(mLruBitmapCache.getBitmap(imgKey) == null){
+					byte[] imageBytes = getItem(position).getCover();
+					Bitmap pic = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+					mLruBitmapCache.putBitmap(imgKey, pic);
+					//bookCover.setImageBitmap(pic);
+					bookCover.setImageBitmap(mLruBitmapCache.getBitmap(imgKey));
+				}
+				else{
+					bookCover.setImageBitmap(mLruBitmapCache.get(imgKey));
+				}
+			}catch(Exception e){
+				Log.e("LibraryFragment", "Error : " + e.getMessage());
+			}
 			LibraryModel l = getItem(position);
 			l.setCover(null); // biar lebih enteng
 			bookCover.setTag(l);
@@ -425,7 +438,7 @@ public class LibraryFragment extends Fragment {
 			int count;
 			try {
 				URL url = new URL(f_url[0]);
-				url = new URL("http://www.worldbank.org/content/dam/Worldbank/document/EAP/Indonesia/Indonesia-Beyond-2015.pdf");
+				//url = new URL("http://www.worldbank.org/content/dam/Worldbank/document/EAP/Indonesia/Indonesia-Beyond-2015.pdf");
 				HttpURLConnection conection = (HttpURLConnection) url.openConnection();
 				conection.connect();
 				int lenghtOfFile = conection.getContentLength() / 1024;
@@ -435,7 +448,7 @@ public class LibraryFragment extends Fragment {
 				File folder = new File(LIBRARY_FOLDER);
 				folder.mkdirs();
 				String [] urls = url.toString().split("/");
-				String filename = urls[urls.length-1]+".pdf";
+				String filename = urls[urls.length-1];
 				
 				Log.d("Download Library", "Downloading file from " + url.openStream() + ". Will be saved to " + folder +"/"+ filename);
 				

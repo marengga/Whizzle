@@ -126,8 +126,7 @@ public class NewsfeedFragment extends Fragment {
                 item.setTitle(feedObj.getString("Title"));
  
                 // Image might be null sometimes
-                String image = feedObj.isNull("ImageUrl") ? null : feedObj
-                        .getString("ImageUrl");
+                String image = feedObj.isNull("ImageUrl") ? null : feedObj.getString("ImageUrl");
                 item.setImage(image);
                 item.setNewsContent(feedObj.getString("NewsContent"));
                 item.setProfilePic(feedObj.getString("ImageUrl"));
@@ -135,14 +134,13 @@ public class NewsfeedFragment extends Fragment {
                 item.setCategory(feedObj.getInt("Category"));
  
                 // url might be null sometimes
-                String feedUrl = feedObj.isNull("url") ? null : feedObj
-                        .getString("url");
+                String feedUrl = feedObj.isNull("url") ? null : feedObj.getString("url");
                 item.setUrl(feedUrl);
  
                 feedItems.add(item);
             }
  
-            // notify data changes to list adapater
+            // notify data changes to list adapter
             listAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
