@@ -556,6 +556,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    }
 	    return us;
 	}
+	
+	public ArrayList<ChatModel> getChatList() {
+	    ArrayList <ChatModel> us = new ArrayList <ChatModel> ();
+	    String selectQuery = "SELECT u." + USR_ID + ", u." + USR_NAME + ", u." + USR_AVATAR +", m." + MSG_MESSAGE + " "+
+			"FROM " + TABLE_USER + " u "+
+			"INNER JOIN " + TABLE_MESSAGE + " m "+
+			"ON m." + MSG_ID + "= "+
+			"( "+
+				"SELECT " + MSG_ID + " "+ 
+				"FROM " + TABLE_MESSAGE + " "+
+				"WHERE " + MSG_REC_USER + "= u." + USR_ID + " "+
+				"ORDER BY " + MSG_SENT + " DESC "+
+				"LIMIT 1" +
+			")";
+
+	    Log.d(TAG, "Getting Chat List : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	ChatModel t = new ChatModel();
+	        	t.setUserId(c.getString(c.getColumnIndex(USR_ID)));
+	        	t.setMessage(c.getString(c.getColumnIndex(MSG_MESSAGE)));
+	        	t.setUsername(c.getString(c.getColumnIndex(USR_NAME)));
+				t.setAvatar(c.getBlob(c.getColumnIndex(USR_AVATAR)));
+	            us.add(t);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
 	// #endregion
 	public void clearAllData() {
         SQLiteDatabase db = this.getWritableDatabase();

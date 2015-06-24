@@ -27,6 +27,7 @@
     <string name="btn_login">LOGIN</string>
     <string name="btn_logout">LOGOUT</string>
     <string name="hint_status">Enter your status message ..</string>
+    <string name="hint_chat">Enter your message here ..</string>
     
     <string name="lib_category">Category</string>
     <string name="lib_title">Title</string>
@@ -38,10 +39,5 @@
     <string name="read">Read</string>
     <string name="close">Close</string>
     
-    <string name="title">(Android WebSockets Chat App)</string>
-    <string name="author_name">By Ravi Tamada</string>
-    <string name="author_url">www.androidhive.info</string>
-    <string name="enter_name">Enter your name</string>
-    <string name="btn_join">JOIN</string>
     <string name="btn_send">Send</string>
 </resources >

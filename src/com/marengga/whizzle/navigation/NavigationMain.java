@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.marengga.whizzle.adapter.NavigationAdapter;
 import com.marengga.whizzle.data.DatabaseHelper;
+import com.marengga.whizzle.fragments.ChatlistFragment;
 import com.marengga.whizzle.fragments.ContactFragment;
 import com.marengga.whizzle.fragments.LibraryFragment;
 import com.marengga.whizzle.fragments.LoginActivity;
@@ -132,8 +133,17 @@ public class NavigationMain extends ActionBarActivity{
 		case Constant.MENU_LIBRARY:			
 			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_LIBRARY));
 			break;
+		case Constant.MENU_MESSAGE:			
+			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_MESSAGE));
+			break;
+		case Constant.MENU_TEAM:			
+			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_TEAM));
+			break;
 		case Constant.MENU_CONTACT:
 			mFragment = new ContactFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_CONTACT));
+			break;
+		case Constant.MENU_CHAT:
+			mFragment = new ChatlistFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_CHAT));
 			break;
 		case Constant.MENU_SETTING:
 			mFragment = new ProfileFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_SETTING));
