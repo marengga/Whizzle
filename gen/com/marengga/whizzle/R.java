@@ -1073,18 +1073,21 @@ containing a value of this type.
         public static final int ic_avatar=0x7f020074;
         public static final int ic_launcher=0x7f020075;
         public static final int ic_liveo=0x7f020076;
-        public static final int ic_user=0x7f020077;
-        public static final int ic_whizzle_logo=0x7f020078;
-        public static final int image_border=0x7f020079;
-        public static final int image_state=0x7f02007a;
-        public static final int rectangle_counter=0x7f02007b;
-        public static final int seletor_item_navigation=0x7f02007c;
-        public static final int shelf1=0x7f02007d;
-        public static final int textview_border=0x7f02007e;
-        public static final int tile_bg=0x7f02007f;
+        public static final int ic_pin=0x7f020077;
+        public static final int ic_team=0x7f020078;
+        public static final int ic_user=0x7f020079;
+        public static final int ic_whizzle_logo=0x7f02007a;
+        public static final int image_border=0x7f02007b;
+        public static final int image_state=0x7f02007c;
+        public static final int rectangle_counter=0x7f02007d;
+        public static final int seletor_item_navigation=0x7f02007e;
+        public static final int shelf1=0x7f02007f;
+        public static final int textview_border=0x7f020080;
+        public static final int tile_bg=0x7f020081;
     }
     public static final class id {
         public static final int ImgDrawer=0x7f09005f;
+        public static final int LinearLayout01=0x7f090070;
         public static final int ListContact=0x7f09004b;
         public static final int action_bar=0x7f09001c;
         public static final int action_bar_activity_content=0x7f090001;
@@ -1097,15 +1100,15 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_close_button=0x7f090024;
-        public static final int action_settings=0x7f09006f;
+        public static final int action_settings=0x7f090072;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
         public static final int bookCover=0x7f090052;
-        public static final int btnChangeAvatar=0x7f09006b;
-        public static final int btnEditStatus=0x7f09006c;
+        public static final int btnChangeAvatar=0x7f09006c;
+        public static final int btnEditStatus=0x7f09006d;
         public static final int btnLogin=0x7f090057;
-        public static final int btnLogout=0x7f09006d;
+        public static final int btnLogout=0x7f09006e;
         public static final int btnSend=0x7f090044;
         public static final int checkbox=0x7f09002d;
         public static final int collapseActionView=0x7f090010;
@@ -1120,6 +1123,7 @@ containing a value of this type.
         public static final int expand_activities_button=0x7f090026;
         public static final int expanded_menu=0x7f09002c;
         public static final int feedImage1=0x7f090069;
+        public static final int gridview=0x7f09006b;
         public static final int home=0x7f090000;
         public static final int homeAsUp=0x7f09000a;
         public static final int icon=0x7f09002a;
@@ -1143,9 +1147,9 @@ containing a value of this type.
         public static final int list_item=0x7f090029;
         public static final int list_view_messages=0x7f090041;
         public static final int llMsgCompose=0x7f090042;
-        public static final int menu_add=0x7f090070;
-        public static final int menu_search=0x7f090071;
-        public static final int menu_update=0x7f090072;
+        public static final int menu_add=0x7f090073;
+        public static final int menu_search=0x7f090074;
+        public static final int menu_update=0x7f090075;
         public static final int middle=0x7f090018;
         public static final int never=0x7f090012;
         public static final int nip=0x7f090055;
@@ -1184,8 +1188,9 @@ containing a value of this type.
         public static final int txtDownload=0x7f09004f;
         public static final int txtLastMessage=0x7f09004a;
         public static final int txtMsg=0x7f090046;
+        public static final int txtName=0x7f090071;
         public static final int txtNewsContent=0x7f090067;
-        public static final int txtRoute=0x7f09006e;
+        public static final int txtRoute=0x7f09006f;
         public static final int txtStatus=0x7f09004d;
         public static final int txtUrl=0x7f090068;
         public static final int txtUsername=0x7f090049;
@@ -1268,9 +1273,13 @@ containing a value of this type.
         public static final int newsfeed_fragment=0x7f030027;
         public static final int newsfeed_item_news=0x7f030028;
         public static final int newsfeed_item_updates=0x7f030029;
-        public static final int profile_fragment=0x7f03002a;
-        public static final int route_fragment=0x7f03002b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002c;
+        public static final int pinboard_fragment=0x7f03002a;
+        public static final int profile_fragment=0x7f03002b;
+        public static final int route_fragment=0x7f03002c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
+        public static final int team_activity_main=0x7f03002e;
+        public static final int team_fragment=0x7f03002f;
+        public static final int team_item=0x7f030030;
     }
     public static final class menu {
         public static final int main=0x7f0d0000;

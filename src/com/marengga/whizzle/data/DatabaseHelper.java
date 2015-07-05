@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -121,8 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			USR_ISFRIEND + " BOOL "+
 		")";
 	private static final String CREATE_TEAM = "CREATE TABLE " +
-			TABLE_TEAM + "(" + USR_ID + " TEXT PRIMARY KEY, "+
-			TIM_ID + " TEXT, "+
+			TABLE_TEAM + "(" + TIM_ID + " TEXT PRIMARY KEY, "+
 			TIM_NAME + " TEXT, "+
 			TIM_DESC + " TEXT, "+
 			TIM_AVATAR + " TEXT "+
@@ -320,7 +320,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	// #endregion
 
 	// #region User
-	public long createUser(UserModel u) {
+	public long createUser(UserModel u, boolean replace) {
 		long library_id = -1;
 		
 		Log.d(TAG, "Inserting User");
@@ -334,7 +334,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    values.put(USR_NAME, u.getFullName());
 	    values.put(USR_STATUS, u.getStatus());
 	    
-	    library_id = db.insertWithOnConflict(TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+	    if(replace)
+	    	library_id = db.insertWithOnConflict(TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+	    else
+	    	library_id = db.insertWithOnConflict(TABLE_USER, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 		
 		return library_id;
 	}
@@ -401,8 +404,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    String selectQuery = "SELECT u.* "+
 	    		"FROM " + TABLE_USER + " u " +
 	    		"INNER JOIN " + TABLE_USERTEAM + " ut "+ 
-	    			" ON u." + USR_ID + "=ut." + UTM_USER + 
-	    		"WHERE ut." + UTM_TEAM + "=" + TeamId;
+	    			" ON u." + USR_ID + "=ut." + UTM_USER +  " " +
+	    		"WHERE ut." + UTM_TEAM + "='" + TeamId + "' " +
+	    		"ORDER BY u." + USR_NAME;
 
 	    Log.d(TAG, "Getting All Team Member : " + selectQuery);
 
@@ -525,10 +529,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		return msdig;
 	}
+	// TODO : salah nih methodnya
 	public ArrayList<ChatModel> getMessageByUser(String UserId) {
 	    ArrayList <ChatModel> us = new ArrayList <ChatModel> ();
 	    String selectQuery = "SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
-	    		" CASE WHEN m." + MSG_REC_USER + "='" + UserId + "' THEN 1 ELSE 0 END as IsMe" + 
+	    		" CASE WHEN m." + MSG_SENDER + "='" + UserId + "' THEN 1 ELSE 0 END as IsMe" + 
 	    		" FROM " + TABLE_MESSAGE + " m " +
 	    		" INNER JOIN " + TABLE_USER + " u " +
 	    			" ON m." + MSG_SENDER + " = u." + USR_ID + 
@@ -547,6 +552,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	        	t.setMessage(c.getString(c.getColumnIndex(MSG_MESSAGE)));
 	        	if(t.getIsMe())
 	        		t.setUsername("Me");
+	        	else
+	        		t.setUsername(c.getString(c.getColumnIndex(USR_NAME)));
+				t.setSent(c.getString(c.getColumnIndex(MSG_SENT)));
+	        	t.setStatusCode(c.getInt(c.getColumnIndex(MSG_STATUS)));
+	            us.add(t);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
+	public ArrayList<ChatModel> getTeamConversation(String TeamId, String UserId) {
+	    ArrayList <ChatModel> us = new ArrayList <ChatModel> ();
+	    String selectQuery = "SELECT m." + MSG_SENDER + ", u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
+	    		" CASE WHEN m." + MSG_SENDER + "='" + UserId + "' THEN 1 ELSE 0 END as IsMe" + 
+	    		" FROM " + TABLE_MESSAGE + " m " +
+	    		" LEFT JOIN " + TABLE_USER + " u " +
+	    			" ON m." + MSG_SENDER + " = u." + USR_ID +
+	    		" WHERE " + MSG_REC_GROUP + "='" + TeamId + "'";
+
+	    Log.d(TAG, "Getting Team Conversation : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+	    Log.v("USer ID", UserId);
+	    Log.v("Cursor Object", DatabaseUtils.dumpCursorToString(c));
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	ChatModel t = new ChatModel();
+	        	t.setIsMe(c.getInt(c.getColumnIndex("IsMe")) == 1 ? true : false);
+	        	t.setMessage(c.getString(c.getColumnIndex(MSG_MESSAGE)));
+	        	if(t.getIsMe())
+	        		t.setUsername("- " + c.getString(c.getColumnIndex(MSG_SENDER)) + " -");
 	        	else
 	        		t.setUsername(c.getString(c.getColumnIndex(USR_NAME)));
 				t.setSent(c.getString(c.getColumnIndex(MSG_SENT)));
@@ -589,6 +626,81 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    return us;
 	}
 	// #endregion
+	
+	// #region Pin
+	public long createPin(PinModel t) {
+		long library_id = -1;
+		
+		Log.d(TAG, "Inserting Pin");
+		
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    ContentValues values = new ContentValues();
+	    values.put(PIN_ASSIGNEE, t.getAssignee());
+	    values.put(PIN_DESC, t.getDescription());
+	    values.put(PIN_DUE, t.getDueDate());
+	    values.put(PIN_ID, t.getPinId());
+	    values.put(PIN_PRIORITY, t.getPriority());
+	    values.put(PIN_STATUSCODE, t.getStatusCode());
+	    values.put(PIN_TEAM, t.getTeamId());
+	    values.put(PIN_TITLE, t.getTitle());
+	    
+	    library_id = db.insertWithOnConflict(TABLE_PIN, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		
+		return library_id;
+	}
+
+	public PinModel getPin(String PinId) {
+	    SQLiteDatabase db = this.getReadableDatabase();
+
+	    String selectQuery = "SELECT  * FROM " + TABLE_PIN + " WHERE " + PIN_ID + " = " + PinId;
+
+	    Log.d(TAG, "Getting Pin : " + selectQuery);
+
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c != null)
+	        c.moveToFirst();
+	    
+	    PinModel t = new PinModel();
+	    t.setAssignee(c.getString(c.getColumnIndex(PIN_ASSIGNEE)));
+	    t.setDescription(c.getString(c.getColumnIndex(PIN_DESC)));
+	    t.setDueDate(c.getString(c.getColumnIndex(PIN_DUE)));
+	    t.setPinId(c.getString(c.getColumnIndex(PIN_ID)));
+	    t.setPriority(c.getInt(c.getColumnIndex(PIN_PRIORITY)));
+	    t.setStatusCode(c.getInt(c.getColumnIndex(PIN_STATUSCODE)));
+	    t.setTeamId(c.getString(c.getColumnIndex(PIN_TEAM)));
+	    t.setTitle(c.getString(c.getColumnIndex(PIN_TITLE)));
+
+	    return t;
+	}
+
+	public ArrayList<PinModel> getPinByTeam(String teamId) {
+	    ArrayList <PinModel> us = new ArrayList <PinModel> ();
+	    String selectQuery = "SELECT * FROM " + TABLE_PIN + " WHERE " + PIN_TEAM + "='" + teamId + "'";
+
+	    Log.d(TAG, "Getting Pin By Team : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	PinModel t = new PinModel();
+	    	    t.setAssignee(c.getString(c.getColumnIndex(PIN_ASSIGNEE)));
+	    	    t.setDescription(c.getString(c.getColumnIndex(PIN_DESC)));
+	    	    t.setDueDate(c.getString(c.getColumnIndex(PIN_DUE)));
+	    	    t.setPinId(c.getString(c.getColumnIndex(PIN_ID)));
+	    	    t.setPriority(c.getInt(c.getColumnIndex(PIN_PRIORITY)));
+	    	    t.setStatusCode(c.getInt(c.getColumnIndex(PIN_STATUSCODE)));
+	    	    t.setTeamId(c.getString(c.getColumnIndex(PIN_TEAM)));
+	    	    t.setTitle(c.getString(c.getColumnIndex(PIN_TITLE)));
+	            us.add(t);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
+	// #endregion
+	
 	public void clearAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         

@@ -41,7 +41,24 @@
 	        <!-- Parent activity meta-data to support 4.0 and lower -->
 	        <meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="com.example.myfirstapp.MainActivity" />
+	            android:value="com.marengga.whizzle.navigation.NavigationMain" />
+        </activity>
+        <activity
+            android:name="com.marengga.whizzle.fragments.TeamActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.marengga.whizzle.navigation.NavigationMain" >
+	        <!-- Parent activity meta-data to support 4.0 and lower -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.marengga.whizzle.navigation.NavigationMain" />
+        </activity>
+        <activity
+            android:name="com.marengga.whizzle.fragments.PinboardActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.marengga.whizzle.fragments.TeamMemberActivity"
+            android:label="@string/app_name" >
         </activity>
     </application>
 

@@ -12,6 +12,7 @@ import com.marengga.whizzle.fragments.LoginActivity;
 import com.marengga.whizzle.fragments.NewsfeedFragment;
 import com.marengga.whizzle.fragments.AboutFragment;
 import com.marengga.whizzle.fragments.ProfileFragment;
+import com.marengga.whizzle.fragments.TeamFragment;
 import com.marengga.whizzle.utils.Constant;
 import com.marengga.whizzle.utils.Menus;
 import com.marengga.whizzle.utils.SessionManager;
@@ -137,7 +138,7 @@ public class NavigationMain extends ActionBarActivity{
 			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_MESSAGE));
 			break;
 		case Constant.MENU_TEAM:			
-			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_TEAM));
+			mFragment = new TeamFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_TEAM));
 			break;
 		case Constant.MENU_CONTACT:
 			mFragment = new ContactFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_CONTACT));
