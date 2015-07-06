@@ -74,6 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String PIN_TEAM = "TeamId";
 	private static final String PIN_TITLE = "Title";
 	private static final String PIN_DESC = "Description";
+	private static final String PIN_CREATEDBY = "CreatedBy";
 	private static final String PIN_ASSIGNEE = "Assignee";
 	private static final String PIN_DUE = "DueDate";
 	private static final String PIN_PRIORITY = "Priority";
@@ -133,11 +134,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			"PRIMARY KEY (" + UTM_TEAM + "," + UTM_USER + ")"+
 		")";
 	private static final String CREATE_PIN = "CREATE TABLE " +
-			TABLE_PIN + "(" + USR_ID + " TEXT PRIMARY KEY, "+
-			PIN_ID + " TEXT, "+
+			TABLE_PIN + "(" + PIN_ID + " TEXT PRIMARY KEY, "+
 			PIN_TEAM + " TEXT, "+
 			PIN_TITLE + " TEXT, "+
 			PIN_DESC + " TEXT, "+
+			PIN_CREATEDBY + " TEXT, "+
 			PIN_ASSIGNEE + " TEXT, "+
 			PIN_DUE + " NUMERIC, "+
 			PIN_PRIORITY + " NUMERIC, "+
@@ -643,6 +644,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    values.put(PIN_STATUSCODE, t.getStatusCode());
 	    values.put(PIN_TEAM, t.getTeamId());
 	    values.put(PIN_TITLE, t.getTitle());
+	    values.put(PIN_CREATEDBY, t.getCreatedBy());
 	    
 	    library_id = db.insertWithOnConflict(TABLE_PIN, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		
@@ -670,13 +672,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    t.setStatusCode(c.getInt(c.getColumnIndex(PIN_STATUSCODE)));
 	    t.setTeamId(c.getString(c.getColumnIndex(PIN_TEAM)));
 	    t.setTitle(c.getString(c.getColumnIndex(PIN_TITLE)));
+	    t.setCreatedBy(c.getString(c.getColumnIndex(PIN_CREATEDBY)));
 
 	    return t;
 	}
 
 	public ArrayList<PinModel> getPinByTeam(String teamId) {
 	    ArrayList <PinModel> us = new ArrayList <PinModel> ();
-	    String selectQuery = "SELECT * FROM " + TABLE_PIN + " WHERE " + PIN_TEAM + "='" + teamId + "'";
+	    String selectQuery = "SELECT * FROM " + TABLE_PIN + " WHERE " + PIN_TEAM + "='" + teamId + "' "+
+	    		"ORDER BY " + PIN_DUE;
 
 	    Log.d(TAG, "Getting Pin By Team : " + selectQuery);
 
@@ -694,6 +698,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    	    t.setStatusCode(c.getInt(c.getColumnIndex(PIN_STATUSCODE)));
 	    	    t.setTeamId(c.getString(c.getColumnIndex(PIN_TEAM)));
 	    	    t.setTitle(c.getString(c.getColumnIndex(PIN_TITLE)));
+	    	    t.setCreatedBy(c.getString(c.getColumnIndex(PIN_CREATEDBY)));
 	            us.add(t);
 	        } while (c.moveToNext());
 	    }

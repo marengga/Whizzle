@@ -1087,7 +1087,7 @@ containing a value of this type.
     }
     public static final class id {
         public static final int ImgDrawer=0x7f09005f;
-        public static final int LinearLayout01=0x7f090070;
+        public static final int LinearLayout01=0x7f090071;
         public static final int ListContact=0x7f09004b;
         public static final int action_bar=0x7f09001c;
         public static final int action_bar_activity_content=0x7f090001;
@@ -1105,10 +1105,10 @@ containing a value of this type.
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
         public static final int bookCover=0x7f090052;
-        public static final int btnChangeAvatar=0x7f09006c;
-        public static final int btnEditStatus=0x7f09006d;
+        public static final int btnChangeAvatar=0x7f09006d;
+        public static final int btnEditStatus=0x7f09006e;
         public static final int btnLogin=0x7f090057;
-        public static final int btnLogout=0x7f09006e;
+        public static final int btnLogout=0x7f09006f;
         public static final int btnSend=0x7f090044;
         public static final int checkbox=0x7f09002d;
         public static final int collapseActionView=0x7f090010;
@@ -1188,9 +1188,9 @@ containing a value of this type.
         public static final int txtDownload=0x7f09004f;
         public static final int txtLastMessage=0x7f09004a;
         public static final int txtMsg=0x7f090046;
-        public static final int txtName=0x7f090071;
+        public static final int txtName=0x7f09006c;
         public static final int txtNewsContent=0x7f090067;
-        public static final int txtRoute=0x7f09006f;
+        public static final int txtRoute=0x7f090070;
         public static final int txtStatus=0x7f09004d;
         public static final int txtUrl=0x7f090068;
         public static final int txtUsername=0x7f090049;
@@ -1274,12 +1274,13 @@ containing a value of this type.
         public static final int newsfeed_item_news=0x7f030028;
         public static final int newsfeed_item_updates=0x7f030029;
         public static final int pinboard_fragment=0x7f03002a;
-        public static final int profile_fragment=0x7f03002b;
-        public static final int route_fragment=0x7f03002c;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
-        public static final int team_activity_main=0x7f03002e;
-        public static final int team_fragment=0x7f03002f;
-        public static final int team_item=0x7f030030;
+        public static final int pinboard_item=0x7f03002b;
+        public static final int profile_fragment=0x7f03002c;
+        public static final int route_fragment=0x7f03002d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002e;
+        public static final int team_activity_main=0x7f03002f;
+        public static final int team_fragment=0x7f030030;
+        public static final int team_item=0x7f030031;
     }
     public static final class menu {
         public static final int main=0x7f0d0000;
