@@ -654,7 +654,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public PinModel getPin(String PinId) {
 	    SQLiteDatabase db = this.getReadableDatabase();
 
-	    String selectQuery = "SELECT  * FROM " + TABLE_PIN + " WHERE " + PIN_ID + " = " + PinId;
+	    String selectQuery = "SELECT  * FROM " + TABLE_PIN + " WHERE " + PIN_ID + " = '" + PinId + "'";
 
 	    Log.d(TAG, "Getting Pin : " + selectQuery);
 

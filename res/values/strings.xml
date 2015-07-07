@@ -40,4 +40,11 @@
     <string name="close">Close</string>
     
     <string name="btn_send">Send</string>
+    
+    <string name="pin_title">Title:</string>
+    <string name="pin_desc">Description:</string>
+    <string name="pin_assignee">Assignee:</string>
+    <string name="pin_due">Due Date:</string>
+    <string name="pin_priority">Priority:</string>
+    <string name="pin_status">Status:</string>
 </resources >
