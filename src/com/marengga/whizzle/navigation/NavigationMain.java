@@ -9,6 +9,7 @@ import com.marengga.whizzle.fragments.ChatlistFragment;
 import com.marengga.whizzle.fragments.ContactFragment;
 import com.marengga.whizzle.fragments.LibraryFragment;
 import com.marengga.whizzle.fragments.LoginActivity;
+import com.marengga.whizzle.fragments.MessageFragment;
 import com.marengga.whizzle.fragments.NewsfeedFragment;
 import com.marengga.whizzle.fragments.AboutFragment;
 import com.marengga.whizzle.fragments.ProfileFragment;
@@ -21,6 +22,8 @@ import com.marengga.whizzle.utils.Utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -34,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -112,9 +116,16 @@ public class NavigationMain extends ActionBarActivity{
 		
 		TextView txtUser = (TextView)findViewById(R.id.txt_user_name_drawer);
 		TextView txtDept = (TextView)findViewById(R.id.txt_user_dept_drawer);
+		ImageView imgAvatar = (ImageView)findViewById(R.id.ImgDrawer);
 		try{
 			txtUser.setText(DatabaseHelper.getInstance(getApplicationContext()).getProfileDetail().getFullName());
 			txtDept.setText(DatabaseHelper.getInstance(getApplicationContext()).getProfileDetail().getDepartment());
+			
+			byte[] imageBytes = DatabaseHelper.getInstance(getApplicationContext()).getProfileDetail().getAvatar();
+			if(imageBytes != null){
+				Bitmap pic = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+				imgAvatar.setImageBitmap(pic);
+			}
 		}
 		catch(Exception e){
 			Log.e("NavigationMain", e.getMessage());
@@ -130,14 +141,14 @@ public class NavigationMain extends ActionBarActivity{
 		switch (position) {
 		case Constant.MENU_NEWSFEED:			
 			mFragment = new NewsfeedFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_NEWSFEED)); 
-			break;			
+			break;
 		case Constant.MENU_LIBRARY:			
-			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_LIBRARY));
+			mFragment = new LibraryFragment();//.newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_LIBRARY));
 			break;
 		case Constant.MENU_MESSAGE:			
-			mFragment = new LibraryFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_MESSAGE));
+			mFragment = new MessageFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_MESSAGE));
 			break;
-		case Constant.MENU_TEAM:			
+		case Constant.MENU_TEAM:
 			mFragment = new TeamFragment().newInstance(Utils.getTitleItem(NavigationMain.this, Constant.MENU_TEAM));
 			break;
 		case Constant.MENU_CONTACT:

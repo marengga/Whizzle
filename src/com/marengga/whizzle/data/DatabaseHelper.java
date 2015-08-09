@@ -13,7 +13,7 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	// Logcat tag
-    private static final String TAG = "DatabaseHelper";
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
  
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -41,12 +41,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LIB_DESCRIPTION = "Description";
     private static final String LIB_COVER = "CoverImage";
     
+    // Profile Table Column Names
     private static final String PRF_ID = "UserId";
     private static final String PRF_NAME = "FullName";
     private static final String PRF_DEPT = "Department";
     private static final String PRF_STATUS = "Status";
     private static final String PRF_AVATAR = "Avatar";
     
+    // News Table Column Names
 	private static final String NWS_ID = "NewsId";
 	private static final String NWS_AUTHOR = "Author";
 	private static final String NWS_PUBLISHED = "PublishedOn";
@@ -55,6 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String NWS_CONTENT = "Content";
 	private static final String NWS_IMG = "ImageUrl";
 	
+	// User Table Column Names
 	private static final String USR_ID = "UserId";
 	private static final String USR_NAME = "FullName";
 	private static final String USR_DEPT = "Department";
@@ -62,14 +65,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String USR_STATUS = "Status";
 	private static final String USR_ISFRIEND = "IsFriend";
 	
+	// Team Table Column Names
 	private static final String TIM_ID = "TeamId";
 	private static final String TIM_NAME = "Name";
 	private static final String TIM_DESC = "Description";
 	private static final String TIM_AVATAR = "Avatar";
 	
+	// UserTeam Table Column Names
 	private static final String UTM_USER = "UserId";
 	private static final String UTM_TEAM = "TeamId";
 	
+	// Pin Table Column Names
 	private static final String PIN_ID = "PinId";
 	private static final String PIN_TEAM = "TeamId";
 	private static final String PIN_TITLE = "Title";
@@ -80,6 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String PIN_PRIORITY = "Priority";
 	private static final String PIN_STATUSCODE = "StatusCode";
 	
+	// Message Table Column Names
 	private static final String MSG_ID = "MessageId";
 	private static final String MSG_SENDER = "Sender";
 	private static final String MSG_SENT = "Sent";
@@ -89,7 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String MSG_EXPIRED = "Expired";
 	private static final String MSG_STATUS = "StatusCode";
     
-    // Create Table SQL Statements
+    // DDL Statements
 	private static final String CREATE_LIBRARY = "CREATE TABLE " +
 			TABLE_LIBRARY + "(" + LIB_ID + " TEXT PRIMARY KEY, " +
 	    	LIB_CATEGORY + " TEXT," +
@@ -108,8 +115,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String CREATE_NEWS = "CREATE TABLE " +
 			TABLE_NEWS + "(" + NWS_ID + " TEXT PRIMARY KEY, " +
 			NWS_AUTHOR + " TEXT, "+
-			NWS_PUBLISHED + " NUMERIC, "+
-			NWS_CATEGORY + " INT, "+
+			NWS_PUBLISHED + " INTEGER, "+
+			NWS_CATEGORY + " INTEGER, "+
 			NWS_TITLE + " TEXT, "+
 			NWS_CONTENT + " TEXT, "+
 			NWS_IMG + " TEXT"+
@@ -140,19 +147,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			PIN_DESC + " TEXT, "+
 			PIN_CREATEDBY + " TEXT, "+
 			PIN_ASSIGNEE + " TEXT, "+
-			PIN_DUE + " NUMERIC, "+
-			PIN_PRIORITY + " NUMERIC, "+
-			PIN_STATUSCODE + " NUMERIC "+
+			PIN_DUE + " INTEGER, "+
+			PIN_PRIORITY + " INTEGER, "+
+			PIN_STATUSCODE + " INTEGER "+
 		")";
 	private static final String CREATE_MESSAGE = "CREATE TABLE " +
 			TABLE_MESSAGE + "(" + MSG_ID + " TEXT PRIMARY KEY, "+
 			MSG_SENDER + " TEXT, "+
-			MSG_SENT + " NUMERIC, "+
+			MSG_SENT + " INTEGER, "+
 			MSG_REC_USER + " TEXT, "+
 			MSG_REC_GROUP + " TEXT, "+
 			MSG_MESSAGE + " TEXT, "+
-			MSG_EXPIRED + " NUMERIC, "+
-			MSG_STATUS + " NUMERIC "+
+			MSG_EXPIRED + " INTEGER, "+
+			MSG_STATUS + " INTEGER "+
 		")";
 	
 	// #endregion
@@ -626,6 +633,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    }
 	    return us;
 	}
+	
+	public ArrayList<MessageModel> getSystemMessage() {
+	    ArrayList <MessageModel> us = new ArrayList <MessageModel> ();
+	    String selectQuery = "SELECT " + MSG_MESSAGE + ", " + MSG_SENT + " " +
+			"FROM " + TABLE_MESSAGE + " " +
+	    	//"WHERE " + MSG_SENDER + " IS NULL ";
+	    	"ORDER BY " + MSG_SENT;
+
+	    Log.d(TAG, "Getting System Message : " + selectQuery);
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor c = db.rawQuery(selectQuery, null);
+
+	    if (c.moveToFirst()) {
+	        do {
+	        	MessageModel t = new MessageModel();
+	        	t.setMessage(c.getString(c.getColumnIndex(MSG_MESSAGE)));
+	        	t.setSent(c.getString(c.getColumnIndex(MSG_SENT)));
+	            us.add(t);
+	        } while (c.moveToNext());
+	    }
+	    return us;
+	}
 	// #endregion
 	
 	// #region Pin
@@ -680,7 +710,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public ArrayList<PinModel> getPinByTeam(String teamId) {
 	    ArrayList <PinModel> us = new ArrayList <PinModel> ();
 	    String selectQuery = "SELECT * FROM " + TABLE_PIN + " WHERE " + PIN_TEAM + "='" + teamId + "' "+
-	    		"ORDER BY " + PIN_DUE;
+	    		"ORDER BY " + PIN_STATUSCODE + "," + PIN_DUE;
 
 	    Log.d(TAG, "Getting Pin By Team : " + selectQuery);
 
