@@ -21,10 +21,12 @@ import com.marengga.whizzle.utils.Utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -43,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.marengga.whizzle.R;
+import com.marengga.whizzle.utils.PushService;
 
 public class NavigationMain extends ActionBarActivity{
 			
@@ -58,6 +61,8 @@ public class NavigationMain extends ActionBarActivity{
 	private ActionBarDrawerToggleCompat mDrawerToggle;
 	
 	private SessionManager session;
+	
+	String mDeviceID;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,12 @@ public class NavigationMain extends ActionBarActivity{
         if (!session.isLoggedIn()) {
         	logout();
         }
+        
+        mDeviceID = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+        Editor editor = getSharedPreferences(PushService.TAG, MODE_PRIVATE).edit();
+    	editor.putString(PushService.PREF_DEVICE_ID, mDeviceID);
+    	editor.commit();
+		PushService.actionStart(getApplicationContext());
 		
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);		

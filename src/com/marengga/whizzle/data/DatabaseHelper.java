@@ -537,17 +537,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		return msdig;
 	}
-	// TODO : salah nih methodnya
+	
 	public ArrayList<ChatModel> getMessageByUser(String UserId) {
 	    ArrayList <ChatModel> us = new ArrayList <ChatModel> ();
-	    String selectQuery = "SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
-	    		" CASE WHEN m." + MSG_SENDER + "='" + UserId + "' THEN 1 ELSE 0 END as IsMe" + 
+	    String selectQuery = 
+	    		" SELECT * FROM ("+
+	    		" SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
+	    		" 1 as IsMe" + 
 	    		" FROM " + TABLE_MESSAGE + " m " +
 	    		" INNER JOIN " + TABLE_USER + " u " +
-	    			" ON m." + MSG_SENDER + " = u." + USR_ID + 
-	    			" OR m." + MSG_REC_USER + " = u." + USR_ID +
-	    		" WHERE " + MSG_SENDER + "='" + UserId + "' OR " + MSG_REC_USER + "='" + UserId + "'";
-
+	    			" ON m." + MSG_REC_USER + " = u." + USR_ID +
+	    		" WHERE m." + MSG_SENDER + " = ( SELECT " + PRF_ID + " FROM " + TABLE_PROFILE + " LIMIT 1) " + 
+	    		" UNION ALL " +
+	    		
+	    		" SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
+	    		" 0 as IsMe" + 
+	    		" FROM " + TABLE_MESSAGE + " m " +
+	    		" INNER JOIN " + TABLE_USER + " u " +
+	    			" ON m." + MSG_SENDER + " = u." + USR_ID +
+	    		" WHERE m." + MSG_REC_USER + " = ( SELECT " + PRF_ID + " FROM " + TABLE_PROFILE + " LIMIT 1) " +
+	    		" )z " +
+	    		" ORDER BY " + MSG_SENT;
+	    
 	    Log.d(TAG, "Getting All Message by User : " + selectQuery);
 
 	    SQLiteDatabase db = this.getReadableDatabase();
@@ -639,7 +650,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    String selectQuery = "SELECT " + MSG_MESSAGE + ", " + MSG_SENT + " " +
 			"FROM " + TABLE_MESSAGE + " " +
 	    	//"WHERE " + MSG_SENDER + " IS NULL ";
-	    	"ORDER BY " + MSG_SENT;
+	    	"ORDER BY " + MSG_SENT + " DESC";
 
 	    Log.d(TAG, "Getting System Message : " + selectQuery);
 
@@ -764,9 +775,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static DatabaseHelper sInstance;
 
 	public static synchronized DatabaseHelper getInstance(Context context) {
-		// Use the application context, which will ensure that you 
-		// don't accidentally leak an Activity's context.
-		// See this article for more information: http://bit.ly/6LRzfx
+		// Andri K. Marengga
+		// Use the application context, which will ensure that you don't accidentally leak an Activity's context.
+		// Sumur: http://bit.ly/6LRzfx
 		if (sInstance == null) {
 			sInstance = new DatabaseHelper(context.getApplicationContext());
 		}

@@ -68,7 +68,14 @@ public class NewsfeedFragment extends Fragment {
         listAdapter = new NewsfeedAdapter(getActivity(), feedItems);
         listView.setAdapter(listAdapter);
         
-        // We first check for cached request
+        updateNews();
+        
+        return rootView;
+ 
+    }
+    
+    private void updateNews(){
+    	// We first check for cached request
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
         Entry entry = cache.get(URL_FEED);
         if (entry != null) {
@@ -107,8 +114,6 @@ public class NewsfeedFragment extends Fragment {
             // Adding request to volley request queue
             AppController.getInstance().addToRequestQueue(jsonReq);
         }
-        return rootView;
- 
     }
  
     /**
@@ -166,8 +171,8 @@ public class NewsfeedFragment extends Fragment {
 	    searchView.setOnQueryTextListener(OnQuerySearchView);
 					    	   	    
 		menu.findItem(Menus.ADD).setVisible(false);
-		menu.findItem(Menus.UPDATE).setVisible(false);		
-		menu.findItem(Menus.SEARCH).setVisible(true);
+		menu.findItem(Menus.UPDATE).setVisible(true);		
+		menu.findItem(Menus.SEARCH).setVisible(false);
   	    
 		mSearchCheck = false;	
 	}	
@@ -179,7 +184,8 @@ public class NewsfeedFragment extends Fragment {
 		case Menus.ADD:	    	
 			break;				
 		
-		case Menus.UPDATE:	    	
+		case Menus.UPDATE:
+			updateNews();
 			break;				
 			
 		case Menus.SEARCH:
