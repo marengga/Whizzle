@@ -542,20 +542,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    ArrayList <ChatModel> us = new ArrayList <ChatModel> ();
 	    String selectQuery = 
 	    		" SELECT * FROM ("+
-	    		" SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
-	    		" 1 as IsMe" + 
-	    		" FROM " + TABLE_MESSAGE + " m " +
-	    		" INNER JOIN " + TABLE_USER + " u " +
-	    			" ON m." + MSG_REC_USER + " = u." + USR_ID +
-	    		" WHERE m." + MSG_SENDER + " = ( SELECT " + PRF_ID + " FROM " + TABLE_PROFILE + " LIMIT 1) " + 
-	    		" UNION ALL " +
-	    		
-	    		" SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
-	    		" 0 as IsMe" + 
-	    		" FROM " + TABLE_MESSAGE + " m " +
-	    		" INNER JOIN " + TABLE_USER + " u " +
-	    			" ON m." + MSG_SENDER + " = u." + USR_ID +
-	    		" WHERE m." + MSG_REC_USER + " = ( SELECT " + PRF_ID + " FROM " + TABLE_PROFILE + " LIMIT 1) " +
+		    		" SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
+		    		" 1 as IsMe" + 
+		    		" FROM " + TABLE_MESSAGE + " m " +
+		    		" INNER JOIN " + TABLE_USER + " u " +
+		    			" ON m." + MSG_REC_USER + " = u." + USR_ID +
+		    		" WHERE m." + MSG_SENDER + " = ( SELECT " + PRF_ID + " FROM " + TABLE_PROFILE + " LIMIT 1) " +
+		    		" AND m." + MSG_REC_USER + " = '" + UserId + "'" +
+		    		" UNION ALL " +
+		    		
+		    		" SELECT u." + USR_NAME + ", m." + MSG_MESSAGE + ", m." + MSG_SENT + ", m." + MSG_STATUS + "," +
+		    		" 0 as IsMe" + 
+		    		" FROM " + TABLE_MESSAGE + " m " +
+		    		" INNER JOIN " + TABLE_USER + " u " +
+		    			" ON m." + MSG_SENDER + " = u." + USR_ID +
+		    		" WHERE m." + MSG_REC_USER + " = ( SELECT " + PRF_ID + " FROM " + TABLE_PROFILE + " LIMIT 1) " +
+		    		" AND m." + MSG_SENDER + " = '" + UserId + "'" +
 	    		" )z " +
 	    		" ORDER BY " + MSG_SENT;
 	    
